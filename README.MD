@@ -541,8 +541,8 @@ Live API docs tersedia di: `https://lifelog-backend-07v9.onrender.com`
 
 ## **Demo Credentials**
 ```
-Email: demo@lifelog.com
-Password: demo123
+Email: zkk@gmail.com
+Password: zkk@gmail.com
 ```
 
 ---
