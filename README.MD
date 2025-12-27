@@ -1,88 +1,117 @@
-# **LifeLog - Daily Activity & Mood Tracker** 📊
+# 📚 **Lifelog - Daily Activity & Mood Tracker**
 
-Sebuah aplikasi web untuk mencatat aktivitas harian, mood, dan tingkat energi dengan analisis visual yang informatif.
+Sebuah aplikasi web untuk mencatat aktivitas harian, mood, dan tingkat energi. Dibangun dengan arsitektur client-server menggunakan **Node.js + Express** untuk backend dan **Vanilla JavaScript + Tailwind CSS** untuk frontend.
 
-## 🌐 **Live Demo**
-- **Frontend:** [https://lifelog-two.vercel.app/](https://lifelog-two.vercel.app/)
-- **Backend API:** [https://lifelog-backend-07v9.onrender.com/](https://lifelog-backend-07v9.onrender.com/)
+![Lifelog Dashboard](https://img.shields.io/badge/Status-Live-brightgreen) ![Backend](https://img.shields.io/badge/Backend-Node.js-green) ![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS-yellow) ![Database](https://img.shields.io/badge/Database-MySQL-blue)
 
-## 📋 **Fitur Utama**
-- ✅ **Registrasi & Login** dengan JWT Authentication
-- ✅ **CRUD Aktivitas** (Create, Read, Update, Delete)
-- ✅ **Tracking Mood & Energy** (1-5 skala)
-- ✅ **Dashboard Analytics** dengan Chart.js
-- ✅ **Filter Aktivitas** berdasarkan kategori, mood, dan tanggal
-- ✅ **Dark/Light Mode**
+## 🎯 **Fitur Utama**
+
+- ✅ **Autentikasi User** (Register & Login dengan JWT)
+- ✅ **CRUD Aktivitas Harian** dengan kategori, mood, dan energi
+- ✅ **Dashboard Analytics** dengan chart dan statistik
+- ✅ **Filter & Pencarian** aktivitas
 - ✅ **Responsive Design** (Mobile & Desktop)
-- ✅ **Export Data** (PDF - coming soon)
+- ✅ **Dark/Light Mode**
+- ✅ **Proteksi Route** berdasarkan autentikasi
+
+## 🏗️ **Arsitektur Sistem**
+
+```
+┌─────────────────┐     HTTP/REST     ┌─────────────────┐     SQL Query     ┌─────────────────┐
+│   Frontend      │ ◄───────────────► │   Backend API   │ ◄───────────────► │   MySQL DB      │
+│   (Vercel)      │                   │   (Render)      │                   │   (Aiven)       │
+└─────────────────┘                   └─────────────────┘                   └─────────────────┘
+```
 
 ---
 
-# 🖥️ **BACKEND REPOSITORY**
+# 🔧 **BACKEND REPOSITORY**
 
-## 📁 **Struktur Proyek**
+**Repository:** [https://github.com/dzikriii24/lifelog-backend](https://github.com/dzikriii24/lifelog-backend)
+
+## 🚀 **Live API Endpoint**
+```
+https://lifelog-backend-07v9.onrender.com
+```
+
+## 📁 **Struktur Proyek Backend**
 ```
 backend/
 ├── src/
 │   ├── config/
-│   │   └── db.js              # Database configuration
+│   │   └── db.js              # Konfigurasi database
 │   ├── controllers/
 │   │   ├── activity.controller.js
 │   │   └── auth.controller.js
 │   ├── middlewares/
-│   │   └── auth.middleware.js
+│   │   └── auth.middleware.js # JWT authentication
 │   ├── routes/
 │   │   ├── activity.routes.js
 │   │   └── auth.routes.js
-│   └── app.js                 # Main application file
-├── .env                       # Environment variables
-├── .gitignore
+│   └── app.js                 # Entry point
 ├── package.json
+├── .env.example
 └── README.md
 ```
 
-## 🚀 **Teknologi Backend**
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MySQL** - Database (Aiven Cloud)
-- **JWT** - Authentication
-- **bcrypt** - Password hashing
-- **cors** - Cross-origin resource sharing
+## 🛠️ **Teknologi Backend**
 
-## 🔧 **Setup Backend**
+- **Runtime:** Node.js v18+
+- **Framework:** Express.js
+- **Database:** MySQL (Aiven Cloud)
+- **Authentication:** JWT (JSON Web Token)
+- **Security:** bcrypt, CORS, dotenv
+- **Package Manager:** npm
 
-### **1. Clone Repository**
-```bash
-git clone https://github.com/yourusername/lifelog-backend.git
-cd lifelog-backend
+## 📦 **Dependencies Backend**
+
+```json
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
 ```
 
-### **2. Install Dependencies**
-```bash
-npm install
+## 🔌 **API Endpoints**
+
+### **Authentication**
+```
+POST   /api/auth/register      # Register user baru
+POST   /api/auth/login         # Login user
+GET    /api/auth/profile       # Get user profile (protected)
+GET    /api/check-auth         # Check authentication status
 ```
 
-### **3. Konfigurasi Environment Variables**
-Buat file `.env` di root directory:
-```env
-# Database Configuration (Aiven MySQL)
-DB_HOST=your-aiven-host.aivencloud.com
-DB_USER=avnadmin
-DB_PASSWORD=your-password
-DB_NAME=defaultdb
-DB_PORT=12345
-
-# Server Configuration
-PORT=3000
-NODE_ENV=development
-
-# JWT Secret
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+### **Activities** (semua endpoints protected)
+```
+GET    /api/activities         # Get semua aktivitas user
+GET    /api/activities/summary # Get dashboard summary
+GET    /api/activities/:id     # Get aktivitas by ID
+POST   /api/activities         # Create aktivitas baru
+PUT    /api/activities/:id     # Update aktivitas
+DELETE /api/activities/:id     # Delete aktivitas
+GET    /api/activities/analytics # Get data analytics
 ```
 
-### **4. Setup Database**
+### **Health Check**
+```
+GET    /health                 # Health check endpoint
+GET    /                       # API documentation
+```
+
+## 🗄️ **Database Schema**
+
+### **Tabel: users**
 ```sql
--- Tabel users
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
@@ -90,8 +119,10 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
 
--- Tabel activities
+### **Tabel: activities**
+```sql
 CREATE TABLE activities (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -106,42 +137,79 @@ CREATE TABLE activities (
 );
 ```
 
-### **5. Run Development Server**
+## ⚙️ **Setup Backend Lokal**
+
+### **1. Clone Repository**
 ```bash
+git clone https://github.com/dzikriii24/lifelog-backend.git
+cd lifelog-backend
+```
+
+### **2. Install Dependencies**
+```bash
+npm install
+```
+
+### **3. Setup Environment Variables**
+Buat file `.env` berdasarkan `.env.example`:
+```env
+# Database Configuration (Aiven MySQL)
+DB_HOST=your-host.aivencloud.com
+DB_USER=avnadmin
+DB_PASSWORD=your-password
+DB_NAME=defaultdb
+DB_PORT=your-port
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# JWT Secret
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+```
+
+### **4. Setup Database Aiven**
+1. Buat akun di [Aiven.io](https://aiven.io)
+2. Buat MySQL service baru
+3. Dapatkan connection details
+4. Import database schema yang tersedia
+
+### **5. Run Server**
+```bash
+# Development mode
 npm run dev
-```
-Server akan berjalan di `http://localhost:3000`
 
-### **6. API Endpoints**
-
-#### **Authentication**
-```
-POST    /api/auth/register     # Register user
-POST    /api/auth/login        # Login user
-GET     /api/auth/profile      # Get user profile (protected)
+# Production mode
+npm start
 ```
 
-#### **Activities**
-```
-GET     /api/activities        # Get all user activities
-GET     /api/activities/summary # Get dashboard summary
-GET     /api/activities/analytics # Get analytics data
-GET     /api/activities/:id    # Get specific activity
-POST    /api/activities        # Create new activity
-PUT     /api/activities/:id    # Update activity
-DELETE  /api/activities/:id    # Delete activity
+### **6. Test API**
+```bash
+# Health check
+curl https://lifelog-backend-07v9.onrender.com/health
+
+# Register user
+curl -X POST https://lifelog-backend-07v9.onrender.com/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","password":"password123"}'
+
+# Login
+curl -X POST https://lifelog-backend-07v9.onrender.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123"}'
 ```
 
-#### **Health Check**
-```
-GET     /health                # Check server status
-GET     /                      # API documentation
+## 🚢 **Deployment ke Render**
+
+### **1. Push ke GitHub**
+```bash
+git add .
+git commit -m "Setup backend"
+git push origin main
 ```
 
-## 🌐 **Deploy ke Render**
-
-### **1. Buat Web Service di Render**
-1. Login ke [render.com](https://render.com)
+### **2. Deploy ke Render**
+1. Login ke [Render](https://render.com)
 2. Klik "New +" → "Web Service"
 3. Connect ke GitHub repository
 4. Configure:
@@ -149,524 +217,350 @@ GET     /                      # API documentation
    - **Environment:** `Node`
    - **Build Command:** `npm install`
    - **Start Command:** `npm start`
-   - **Plan:** Free
+   - **Environment Variables:** Tambahkan semua variabel dari `.env`
 
-### **2. Tambah Environment Variables di Render**
-Di dashboard Render, tambahkan semua variabel dari `.env`
-
-### **3. Database Aiven**
-1. Buat account di [Aiven](https://console.aiven.io/)
-2. Buat MySQL service
-3. Dapatkan connection details
-4. Update environment variables di Render
-
-### **4. Deploy**
-1. Push code ke GitHub
-2. Render akan auto-deploy
-3. Dapatkan URL production: `https://lifelog-backend-xxxx.onrender.com`
-
-## 🧪 **Testing API**
-
-### **Register User**
-```bash
-curl -X POST https://lifelog-backend-07v9.onrender.com/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "password123"
-  }'
-```
-
-### **Login**
-```bash
-curl -X POST https://lifelog-backend-07v9.onrender.com/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "password123"
-  }'
-```
-
-### **Create Activity**
-```bash
-curl -X POST https://lifelog-backend-07v9.onrender.com/api/activities \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "title": "Studying Node.js",
-    "category": "belajar",
-    "mood": "senang",
-    "energy": 4,
-    "note": "Learned about Express middleware",
-    "activity_date": "2024-01-15"
-  }'
-```
-
-## 📊 **Database Schema**
-
-### **Users Table**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INT | Primary key |
-| name | VARCHAR(100) | User full name |
-| email | VARCHAR(100) | Unique email |
-| password | VARCHAR(255) | Hashed password |
-| created_at | TIMESTAMP | Registration time |
-
-### **Activities Table**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INT | Primary key |
-| user_id | INT | Foreign key to users |
-| title | VARCHAR(200) | Activity title |
-| category | ENUM | belajar/kerja/olahraga/santai/lainnya |
-| mood | ENUM | senang/netral/capek/sedih/stres |
-| energy | INT | 1-5 scale |
-| note | TEXT | Optional notes |
-| activity_date | DATE | Date of activity |
-| created_at | TIMESTAMP | Creation time |
-
-## 🔐 **Security Features**
-- ✅ **Password hashing** dengan bcrypt
-- ✅ **JWT authentication** untuk protected routes
-- ✅ **CORS configuration** untuk security
-- ✅ **Input validation** di semua endpoints
-- ✅ **SQL injection prevention** dengan parameterized queries
-- ✅ **Environment variables** untuk sensitive data
-
-## 🐛 **Troubleshooting**
-
-### **Database Connection Error**
-```bash
-# Test database connection
-node -e "
-const mysql = require('mysql2');
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false }
-});
-pool.getConnection((err, conn) => {
-  if (err) console.error('Error:', err.message);
-  else { console.log('Connected!'); conn.release(); }
-});
-"
-```
-
-### **Port Already in Use**
-```bash
-# Linux/Mac
-lsof -i :3000
-kill -9 <PID>
-
-# Windows
-netstat -ano | findstr :3000
-taskkill /PID <PID> /F
-```
-
-### **Missing Dependencies**
-```bash
-# Clear npm cache and reinstall
-rm -rf node_modules package-lock.json
-npm cache clean --force
-npm install
-```
+### **3. Setup Database di Aiven**
+1. Buat MySQL service di Aiven
+2. Dapatkan connection string
+3. Update environment variables di Render dengan data Aiven
 
 ---
 
 # 🎨 **FRONTEND REPOSITORY**
 
-## 📁 **Struktur Proyek**
+**Repository:** [https://github.com/dzikriii24/lifelog-frontend](https://github.com/dzikriii24/lifelog-frontend)
+
+## 🌐 **Live Website**
+```
+https://lifelog-two.vercel.app
+```
+
+## 📁 **Struktur Proyek Frontend**
 ```
 frontend/
 ├── index.html          # Landing page
 ├── login.html          # Login page
 ├── register.html       # Register page
-├── dashboard.html      # Main dashboard (All-in-one)
+├── dashboard.html      # Main dashboard (all-in-one)
 ├── js/
 │   ├── api.js          # API communication
 │   ├── auth.js         # Authentication functions
-│   ├── dashboard.js    # Dashboard logic
-│   └── theme.js        # Theme management
-├── assets/             # Images, icons
+│   ├── dashboard.js    # Dashboard logic (all features)
+│   └── theme.js        # Dark/light theme
+├── assets/             # Images, icons, etc.
 └── README.md
 ```
 
-## 🚀 **Teknologi Frontend**
-- **HTML5** - Markup structure
+## 🎨 **Teknologi Frontend**
+
+- **HTML5** - Semantic markup
 - **Tailwind CSS** - Utility-first CSS framework
-- **JavaScript (ES6+)** - Client-side logic
+- **Vanilla JavaScript** - No frameworks
 - **Chart.js** - Data visualization
 - **Font Awesome** - Icons
 - **Google Fonts** - Typography
 
-## 🔧 **Setup Frontend**
+## 📦 **Dependencies Frontend (CDN)**
+
+```html
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+```
+
+## 🎯 **Fitur Frontend**
+
+### **1. Landing Page**
+- Hero section dengan CTA
+- Features showcase
+- How it works section
+- Responsive design
+
+### **2. Authentication Pages**
+- Register dengan validasi
+- Login dengan JWT token
+- Auto-redirect setelah login
+- Error handling
+
+### **3. Dashboard (All-in-One)**
+- **Tab Navigation:** Dashboard, Activities, Analytics, Profile
+- **Quick Stats:** Today's activities, mood, energy, productivity
+- **Activity Form:** Add new activities with category, mood, energy
+- **Activity List:** Today's activities with CRUD operations
+- **Charts:** Weekly mood, category distribution, monthly trend
+- **Filters:** Date range, category, mood filters
+- **Profile Management:** Update profile, change password
+- **Settings:** Theme, notifications, data preferences
+
+### **4. Analytics Dashboard**
+- Weekly mood trends
+- Activity distribution by category
+- Monthly activity trends
+- Mood distribution pie chart
+- Peak activity hours
+- Most productive day
+- Weekly summary
+
+## 🚀 **Setup Frontend Lokal**
 
 ### **1. Clone Repository**
 ```bash
-git clone https://github.com/yourusername/lifelog-frontend.git
+git clone https://github.com/dzikriii24/lifelog-frontend.git
 cd lifelog-frontend
 ```
 
-### **2. Local Development**
-#### **Option A: VS Code Live Server**
-1. Install "Live Server" extension
-2. Right-click `index.html` → "Open with Live Server"
-3. Browser akan terbuka di `http://localhost:5500`
-
-#### **Option B: Python HTTP Server**
-```bash
-# Python 3
-python -m http.server 5500
-
-# Atau dengan PHP
-php -S localhost:5500
-```
-
-#### **Option C: Node.js HTTP Server**
-```bash
-npm install -g live-server
-live-server --port=5500
-```
-
-### **3. Konfigurasi API URL**
-Edit file `js/api.js`:
+### **2. Setup API Base URL**
+Edit `js/api.js`:
 ```javascript
-// Untuk development (localhost)
+// Untuk development lokal
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// Untuk production (Render)
+// Untuk production (gunakan ini jika deploy)
+// const API_BASE_URL = 'https://lifelog-backend-07v9.onrender.com/api';
+```
+
+### **3. Run Local Server**
+Gunakan Live Server extension di VS Code atau:
+
+```bash
+# Python simple server
+python -m http.server 8000
+
+# Atau dengan Node.js http-server
+npx http-server
+```
+
+### **4. Access di Browser**
+```
+http://localhost:8000
+```
+
+## 🚢 **Deployment ke Vercel**
+
+### **1. Push ke GitHub**
+```bash
+git add .
+git commit -m "Deploy frontend"
+git push origin main
+```
+
+### **2. Deploy ke Vercel**
+1. Login ke [Vercel](https://vercel.com)
+2. Klik "New Project"
+3. Import GitHub repository
+4. Configure:
+   - **Framework Preset:** Static
+   - **Build Command:** (kosongkan)
+   - **Output Directory:** `.`
+   - **Environment Variables:** Tidak perlu untuk static site
+
+### **3. Update API Base URL**
+Setelah deploy, update `API_BASE_URL` di `js/api.js` ke URL backend production.
+
+---
+
+# 🔗 **KONEKSI FRONTEND-BACKEND**
+
+## **Configuration**
+
+### **Frontend (api.js)**
+```javascript
 const API_BASE_URL = 'https://lifelog-backend-07v9.onrender.com/api';
 ```
 
-## 🎨 **UI Features**
-
-### **1. Landing Page (`index.html`)**
-- Hero section dengan CTA
-- Features showcase
-- How-it-works section
-- Responsive navigation
-
-### **2. Authentication Pages**
-- **Login Page** (`login.html`): Form login dengan validation
-- **Register Page** (`register.html`): Form registrasi dengan password confirmation
-
-### **3. Dashboard (`dashboard.html`) - ALL-IN-ONE**
-- **Tab Navigation**: Dashboard, Activities, Analytics, Profile, Settings
-- **Real-time Stats**: Today's activities, mood, energy, productivity
-- **Activity Form**: Quick add dengan kategori, mood, energy level
-- **Activities List**: Today's activities dengan edit/delete
-- **Charts**: Weekly mood, category distribution, analytics
-- **Profile Management**: Update profile, change password
-- **Settings**: Dark mode, notifications, data privacy
-
-## 📱 **Responsive Breakpoints**
-- **Mobile**: `< 640px` (100% width, stacked layout)
-- **Tablet**: `640px - 1024px` (2-column layout)
-- **Desktop**: `> 1024px` (3-column layout, sidebar navigation)
-
-## 🌈 **Color Palette**
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Primary | `#3b82f6` | Buttons, links, active states |
-| Secondary | `#8b5cf6` | Accents, charts |
-| Success | `#10b981` | Positive indicators |
-| Warning | `#f59e0b` | Warnings, energy level 3 |
-| Danger | `#ef4444` | Delete buttons, errors |
-| Dark | `#1f2937` | Text, dark mode |
-| Light | `#f3f4f6` | Background, cards |
-
-## 🚀 **Deploy ke Vercel**
-
-### **1. Connect ke Vercel**
-1. Login ke [vercel.com](https://vercel.com)
-2. Klik "Add New..." → "Project"
-3. Import GitHub repository
-
-### **2. Configure Project**
-- **Framework Preset**: Static
-- **Build Command**: (kosongkan - static site)
-- **Output Directory**: (kosongkan)
-- **Install Command**: (kosongkan)
-
-### **3. Environment Variables**
-Tidak diperlukan untuk frontend static
-
-### **4. Deploy**
-1. Klik "Deploy"
-2. Vercel akan memberikan URL: `https://lifelog-two.vercel.app`
-
-### **5. Custom Domain (Optional)**
-1. Go to Project → Settings → Domains
-2. Add your custom domain
-3. Configure DNS records
-
-## 🔗 **Frontend-Backend Integration**
-
-### **API Communication Flow**
+### **Backend (CORS Configuration)**
 ```javascript
-// 1. User login → get JWT token
-POST /api/auth/login → token
+app.use(cors({
+  origin: ['https://lifelog-two.vercel.app', 'http://localhost:8000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+```
 
-// 2. Store token in localStorage
-localStorage.setItem('token', token);
+## 🔐 **Authentication Flow**
 
-// 3. Use token for subsequent requests
-fetch('/api/activities', {
+1. **Register** → POST `/api/auth/register`
+2. **Login** → POST `/api/auth/login` → dapat JWT token
+3. **Store token** di localStorage
+4. **Setiap request** include token di Authorization header
+5. **Logout** → remove token dari localStorage
+
+```javascript
+// Contoh request dengan token
+fetch('https://lifelog-backend-07v9.onrender.com/api/activities', {
   headers: {
-    'Authorization': `Bearer ${token}`
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
   }
 });
-
-// 4. Auto-redirect if token expired
-if (response.status === 401) {
-  localStorage.removeItem('token');
-  window.location.href = '/login.html';
-}
 ```
 
-### **State Management**
+---
+
+# 📊 **DATA FLOW & FEATURES**
+
+## **Activity Data Structure**
 ```javascript
-// User state in localStorage
 {
-  "token": "jwt_token_here",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com"
-  }
+  "title": "Belajar Node.js",
+  "category": "belajar", // belajar/kerja/olahraga/santai/lainnya
+  "mood": "senang",      // senang/netral/capek/sedih/stres
+  "energy": 4,           // 1-5
+  "note": "Membuat REST API",
+  "activity_date": "2024-01-15"
 }
-
-// Cached activities for offline use
-localStorage.setItem('user_activities', JSON.stringify(activities));
 ```
 
-## 📊 **Chart Implementations**
+## **Dashboard Features**
 
-### **1. Weekly Mood Chart**
-```javascript
-new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [{
-      label: 'Energy Level',
-      data: [3, 4, 3, 5, 4, 3, 4],
-      borderColor: 'rgb(99, 102, 241)'
-    }]
-  }
-});
+### **1. Real-time Statistics**
+- Total activities today
+- Dominant mood
+- Average energy level
+- Productivity score
+
+### **2. Interactive Charts**
+- Weekly mood trend (line chart)
+- Category distribution (doughnut chart)
+- Monthly activity trend (bar chart)
+- Mood distribution (pie chart)
+
+### **3. CRUD Operations**
+- **Create:** Add new activities
+- **Read:** View activities with filters
+- **Update:** Edit existing activities
+- **Delete:** Remove activities
+
+### **4. Filtering & Searching**
+- Filter by date range
+- Filter by category
+- Filter by mood
+- Sort by date/energy
+
+---
+
+# 🐛 **TROUBLESHOOTING**
+
+## **Common Issues**
+
+### **1. CORS Error**
 ```
-
-### **2. Category Distribution**
-```javascript
-new Chart(ctx, {
-  type: 'doughnut',
-  data: {
-    labels: ['Study', 'Work', 'Exercise', 'Relax', 'Other'],
-    datasets: [{
-      data: [25, 30, 15, 20, 10],
-      backgroundColor: [
-        'rgb(139, 92, 246)',
-        'rgb(59, 130, 246)',
-        'rgb(16, 185, 129)',
-        'rgb(245, 158, 11)',
-        'rgb(107, 114, 128)'
-      ]
-    }]
-  }
-});
+Access to fetch at 'https://backend.com' from origin 'https://frontend.com' 
+has been blocked by CORS policy
 ```
+**Solution:** Update CORS origin di backend untuk include frontend URL.
 
-## 🎯 **User Flow**
-
-### **Registration Flow**
+### **2. JWT Token Expired**
 ```
-Landing Page → Register → Auto Login → Dashboard
+HTTP 401: Unauthorized
 ```
+**Solution:** Auto-logout user dan redirect ke login page.
 
-### **Login Flow**
+### **3. Database Connection Error**
 ```
-Login Page → Authentication → Dashboard
+Error: connect ECONNREFUSED
 ```
+**Solution:** Cek database credentials dan pastikan service aktif.
 
-### **Activity Flow**
+### **4. Chart.js Error**
 ```
-Dashboard → Add Activity → View in List → Edit/Delete
+Canvas is already in use. Chart with ID '0' must be destroyed
 ```
+**Solution:** Pastikan chart di-destroy sebelum membuat yang baru.
 
-### **Analytics Flow**
-```
-Dashboard → Analytics Tab → View Charts & Insights
-```
+## **Development Tips**
 
-## 🛠 **Development Workflow**
+1. **Gunakan browser DevTools** untuk debugging
+2. **Cek Network tab** untuk request/response
+3. **Monitor console errors**
+4. **Test API dengan Postman/curl**
+5. **Clear localStorage** jika ada auth issues
 
-### **1. Setup Development Environment**
-```bash
-# Clone both repos
-git clone https://github.com/yourusername/lifelog-backend.git
-git clone https://github.com/yourusername/lifelog-frontend.git
+---
 
-# Run backend
-cd lifelog-backend
-npm run dev
+# 📈 **PROJECT ROADMAP**
 
-# Run frontend
-cd ../lifelog-frontend
-live-server --port=5500
-```
+## **Completed**
+- [x] Basic CRUD operations
+- [x] User authentication
+- [x] Dashboard with charts
+- [x] Responsive design
+- [x] Deployment to Render & Vercel
 
-### **2. Testing Endpoints**
-Gunakan **Postman** atau **curl** untuk test API:
-```bash
-# Health check
-curl https://lifelog-backend-07v9.onrender.com/health
+## **Future Enhancements**
+- [ ] Push notifications
+- [ ] Data export (PDF/Excel)
+- [ ] Mobile app (React Native)
+- [ ] Social features
+- [ ] Advanced analytics
+- [ ] Multi-language support
 
-# Get activities (with auth)
-curl -H "Authorization: Bearer YOUR_TOKEN" \
-  https://lifelog-backend-07v9.onrender.com/api/activities
-```
+---
 
-### **3. Debugging Tips**
-```javascript
-// Enable debug logging
-console.log('API Response:', response);
+# 👥 **CONTRIBUTING**
 
-// Check localStorage
-console.log('Token:', localStorage.getItem('token'));
-console.log('User:', localStorage.getItem('user'));
+## **Cara Kontribusi**
 
-// Monitor network requests
-// Browser DevTools → Network tab
-```
-
-## 📈 **Performance Optimization**
-
-### **Frontend**
-- ✅ **Lazy loading** untuk charts
-- ✅ **Local caching** untuk activities
-- ✅ **Minified assets** di production
-- ✅ **CDN usage** untuk libraries
-
-### **Backend**
-- ✅ **Connection pooling** untuk database
-- ✅ **Indexed columns** untuk faster queries
-- ✅ **Compressed responses** (gzip)
-- ✅ **CORS preflight caching**
-
-## 🔒 **Security Best Practices**
-
-### **Frontend**
-- ✅ **Input validation** di client-side
-- ✅ **XSS prevention** dengan textContent (bukan innerHTML)
-- ✅ **Secure token storage** di localStorage
-- ✅ **HTTPS enforcement** di production
-
-### **Backend**
-- ✅ **SQL injection prevention** dengan parameterized queries
-- ✅ **Rate limiting** (coming soon)
-- ✅ **Helmet.js** untuk security headers
-- ✅ **Input sanitization**
-
-## 📱 **Browser Compatibility**
-- ✅ Chrome 60+
-- ✅ Firefox 55+
-- ✅ Safari 11+
-- ✅ Edge 79+
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
-
-## 🤝 **Contributing**
-
-### **Backend Contributions**
 1. Fork repository
 2. Create feature branch
 3. Commit changes
 4. Push to branch
 5. Create Pull Request
 
-### **Frontend Contributions**
-1. Fork repository
-2. Create feature branch
-3. Test UI changes
-4. Commit changes
-5. Create Pull Request
+## **Development Workflow**
 
-### **Coding Standards**
-```javascript
-// Backend: ES6 modules, async/await, error handling
-exports.getActivities = async (req, res) => {
-  try {
-    const data = await db.query('SELECT * FROM activities');
-    res.json({ success: true, data });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Frontend: ES6+, template literals, modular functions
-async function loadDashboard() {
-  try {
-    const response = await fetch('/api/activities');
-    const data = await response.json();
-    updateUI(data);
-  } catch (error) {
-    showError(error.message);
-  }
-}
-```
-
-## 📄 **License**
-MIT License - see LICENSE file
-
-## 🙏 **Acknowledgements**
-- **Tailwind CSS** for amazing utility classes
-- **Chart.js** for beautiful data visualization
-- **Aiven** for free MySQL hosting
-- **Render** for free backend hosting
-- **Vercel** for free frontend hosting
-
-## 📞 **Support**
-- **Issues**: [GitHub Issues](https://github.com/yourusername/lifelog/issues)
-- **Email**: your-email@example.com
-- **Documentation**: [Wiki](https://github.com/yourusername/lifelog/wiki)
-
----
-
-## 🎯 **Quick Start Summary**
-
-### **For Users**
-1. Visit [https://lifelog-two.vercel.app/](https://lifelog-two.vercel.app/)
-2. Register new account
-3. Start logging activities
-4. View analytics in dashboard
-
-### **For Developers**
 ```bash
 # Backend
-git clone https://github.com/yourusername/lifelog-backend.git
-cd lifelog-backend
+cd backend
 npm install
 npm run dev
 
 # Frontend
-git clone https://github.com/yourusername/lifelog-frontend.git
-cd lifelog-frontend
-live-server --port=5500
+cd frontend
+# Use Live Server or any static server
 ```
-
-### **For Deployment**
-1. **Backend**: Connect GitHub repo to Render
-2. **Frontend**: Connect GitHub repo to Vercel
-3. **Database**: Create Aiven MySQL service
-4. **Environment**: Set variables in both platforms
 
 ---
 
-**Happy Tracking!** 📈✨
+# 📞 **SUPPORT**
 
-*"Track your daily journey, understand your patterns, improve your life."*
+## **Contact Developer**
+- **GitHub:** [@dzikriii24](https://github.com/dzikriii24)
+- **Project Issues:** Gunakan GitHub Issues
+
+## **API Documentation**
+Live API docs tersedia di: `https://lifelog-backend-07v9.onrender.com`
+
+## **Demo Credentials**
+```
+Email: demo@lifelog.com
+Password: demo123
+```
+
+---
+
+# 📜 **LICENSE**
+
+MIT License - lihat [LICENSE](LICENSE) file untuk detail.
+
+---
+
+# 🙏 **ACKNOWLEDGMENTS**
+
+- **Tailwind CSS** untuk utility classes yang luar biasa
+- **Chart.js** untuk visualisasi data yang mudah
+- **Aiven** untuk database cloud gratis
+- **Render & Vercel** untuk hosting gratis
+- **Font Awesome** untuk icon set lengkap
+
+---
+
+**⭐ Jika project ini membantu, jangan lupa beri star di GitHub!**
